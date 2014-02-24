@@ -1,7 +1,7 @@
 package hill.hotel.room;
 
 import hill.hotel.config.Config;
-import hill.hotel.management.Guest;
+import hill.hotel.guest.Guest;
 
 public class Room implements ICheckable, IReservable {
 	

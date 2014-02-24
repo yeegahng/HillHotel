@@ -1,12 +1,10 @@
 package hill.hotel.room;
 
 import hill.hotel.config.Config;
-import hill.hotel.management.Guest;
+import hill.hotel.guest.Guest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.Vector;
 
 public class RoomManager {
 
@@ -34,7 +32,7 @@ public class RoomManager {
 		}		
 	}
 
-	public void checkIn(Guest guest) {
+	public void requestCheckIn(Guest guest) {
 		Key key = getAvailableRoomKey(null);
 		mRoomKeyMap.get(key).checkIn(guest);
 		guest.assignRoom(key);
@@ -42,17 +40,17 @@ public class RoomManager {
 
 	private Key getAvailableRoomKey(RoomRequestInfo reqInfo) {
 		if(reqInfo != null) {
-			
+			//TODO: find room with request info (such as favorite floor, room direction, double/twin setup, etc.)
 		}
 		else {
 			for(Key key : mRoomKeyMap.keySet()) {
-				
+				//TODO: find any available room (search from the lower floor, room index)
 			}
 		}
 		return null;
 	}
 
-	public void checkOut(Guest guest) {
+	public void requestCheckOut(Guest guest) {
 		Key key = guest.getKey();
 		Room room = mRoomKeyMap.get(key);
 		if(room != null) {

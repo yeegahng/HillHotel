@@ -1,4 +1,4 @@
-package hill.hotel.management;
+package hill.hotel.guest;
 
 import hill.hotel.room.Key;
 

@@ -2,6 +2,7 @@ package hill.hotel.config;
 
 public class Config {
 	
+	public final static String PHONE_NUMBER = "02-123-7890";
 	public final static int ROOM_CHARGE = 50000;
 	public final static int BOTTOM_FLOOR = 1;
 	public final static int TOP_FLOOR = 5;

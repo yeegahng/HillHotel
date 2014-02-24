@@ -1,11 +1,15 @@
 package hill.hotel.management;
 
+import government.service.validity.GovernmentProxy;
+import hill.hotel.executive.HotelOwner;
+import hill.hotel.guest.Guest;
 import hill.hotel.room.RoomManager;
 
 public class HotelManager {
 	
-	private HotelManager mHotelManager = new HotelManager();
+	private static HotelManager mHotelManager = null;
 	private boolean mIsHotelReady = false;
+	private final int mLicenseNumber;
 	
 	//Staffs
 	private RoomManager roomManager;
@@ -14,20 +18,31 @@ public class HotelManager {
 	private PoliceWatcher policeWatcher;
 	
 	//HotelManager works as a singleton
-	public HotelManager callHotelManager() {
+	public static HotelManager callHotelManager(HotelOwner hotelOwner) {
+		if(hotelOwner == null) {
+			System.out.println("HotelOwner is null: Cannot open hotel.");
+			return null;
+		}
+		int licenseNumber = hotelOwner.getLicenseNumber();
+		if(!GovernmentProxy.getProxy().verifyLicenseValidity(licenseNumber)) {
+			System.out.println("HotelOwner info is invalid: Cannot open hotel.");
+			return null;
+		}
 		if(mHotelManager == null) {
-			mHotelManager = new HotelManager();
+			mHotelManager = new HotelManager(licenseNumber);
 		}
 		return mHotelManager;
 	}
 	
-	private HotelManager() {
+	private HotelManager(int licenseNumber) {
 		try {
 			hireStaffs();
 		} catch(Exception e) {
-			System.out.println("Failed to hire staffs: Cannot open hotel now.");
+			System.out.println("Failed to hire staffs: Cannot open hotel.");
 		}
+		mLicenseNumber = licenseNumber;
 		mIsHotelReady = true;
+		System.out.println("Hotel " + mLicenseNumber + " is ready to open");
 	}
 
 	private void hireStaffs() {
@@ -47,7 +62,7 @@ public class HotelManager {
 			System.out.println("No such vehicle parked: vehicle info " + guest.getVehicleInfo());
 		}		
 		//TODO queue로 처리할 것
-		roomManager.checkIn(guest);
+		roomManager.requestCheckIn(guest);
 	}
 	public void checkOut(Guest guest) {		
 		String vehicleInfo = guest.getVehicleInfo();
@@ -55,6 +70,6 @@ public class HotelManager {
 			parkingLotManager.valletParkOut(vehicleInfo);
 		}
 		//TODO queue로 처리할 것
-		roomManager.checkOut(guest);
+		roomManager.requestCheckOut(guest);
 	}
 }
