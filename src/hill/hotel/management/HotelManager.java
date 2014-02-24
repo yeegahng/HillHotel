@@ -4,6 +4,7 @@ import government.service.validity.GovernmentProxy;
 import hill.hotel.executive.HotelOwner;
 import hill.hotel.guest.Guest;
 import hill.hotel.room.RoomManager;
+import hill.hotel.util.Log;
 
 public class HotelManager {
 	
@@ -20,12 +21,12 @@ public class HotelManager {
 	//HotelManager works as a singleton
 	public static HotelManager callHotelManager(HotelOwner hotelOwner) {
 		if(hotelOwner == null) {
-			System.out.println("HotelOwner is null: Cannot open hotel.");
+			Log.e("HotelOwner is null: Cannot call hotel manager.");
 			return null;
 		}
 		int licenseNumber = hotelOwner.getLicenseNumber();
 		if(!GovernmentProxy.getProxy().verifyLicenseValidity(licenseNumber)) {
-			System.out.println("HotelOwner info is invalid: Cannot open hotel.");
+			Log.e("Failed to verify HotelOwner license: Cannot call hotel manager.");
 			return null;
 		}
 		if(mHotelManager == null) {
@@ -38,11 +39,11 @@ public class HotelManager {
 		try {
 			hireStaffs();
 		} catch(Exception e) {
-			System.out.println("Failed to hire staffs: Cannot open hotel.");
+			Log.e("Failed to hire staffs: Cannot open hotel.");
 		}
 		mLicenseNumber = licenseNumber;
 		mIsHotelReady = true;
-		System.out.println("Hotel " + mLicenseNumber + " is ready to open");
+		Log.i("Hotel " + mLicenseNumber + " is ready to open");
 	}
 
 	private void hireStaffs() {
@@ -58,15 +59,12 @@ public class HotelManager {
 	}
 
 	public void checkIn(Guest guest) {
-		if(!parkingLotManager.isVehicleParked(guest.getVehicleInfo())) {
-			System.out.println("No such vehicle parked: vehicle info " + guest.getVehicleInfo());
-		}		
 		//TODO queue로 처리할 것
 		roomManager.requestCheckIn(guest);
 	}
 	public void checkOut(Guest guest) {		
 		String vehicleInfo = guest.getVehicleInfo();
-		if(vehicleInfo != null) {
+		if(vehicleInfo != null && parkingLotManager.isVehicleParked(vehicleInfo)) {
 			parkingLotManager.valletParkOut(vehicleInfo);
 		}
 		//TODO queue로 처리할 것

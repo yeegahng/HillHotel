@@ -3,6 +3,7 @@ package hill.hotel.executive;
 import government.service.validity.GovernmentProxy;
 import hill.hotel.config.Config;
 import hill.hotel.management.HotelManager;
+import hill.hotel.util.Log;
 
 public class HotelOwner implements IBusinessRunnable {
 	
@@ -12,8 +13,8 @@ public class HotelOwner implements IBusinessRunnable {
 	public final void acquireLicense() {
 		GovernmentProxy govProxy = GovernmentProxy.getProxy();
 		govProxy.registerBusiness(this);
-		System.out.println("Hotel license acquired: " + mLicenseNumber);
-		System.out.println("Hotel phone number: " + mPhoneNumber);
+		Log.i("Hotel license acquired: " + mLicenseNumber);
+		Log.i("Hotel phone number: " + mPhoneNumber);
 		
 	}
 
@@ -30,6 +31,9 @@ public class HotelOwner implements IBusinessRunnable {
 
 	public void startBusiness() {
 		HotelManager hotelManager = HotelManager.callHotelManager(this);
+		if(hotelManager == null) {
+			Log.e("Without hotel manager, owner is unable to start business. Application quits.");
+		}
 	}
 
 

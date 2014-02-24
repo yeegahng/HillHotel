@@ -1,5 +1,7 @@
 package hill.hotel.room;
 
+import hill.hotel.util.Log;
+
 public class Key {
 	
 	private Room mRoom;
@@ -12,7 +14,7 @@ public class Key {
 			return mRoom.getRoomNumber();
 		}
 		else {
-			System.out.println("This key hasn't been registered: No room info available now.");
+			Log.w("This key hasn't been registered: No room info available now.");
 			return -1;
 		}
 	}

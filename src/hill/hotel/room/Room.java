@@ -2,6 +2,7 @@ package hill.hotel.room;
 
 import hill.hotel.config.Config;
 import hill.hotel.guest.Guest;
+import hill.hotel.util.Log;
 
 public class Room implements ICheckable, IReservable {
 	
@@ -58,7 +59,7 @@ public class Room implements ICheckable, IReservable {
 			mRoomState = State.RESERVED;
 		}
 		else {
-			System.out.println("Cannot reserve room #" + mRoomNumber + ": Room state is " + mRoomState);
+			Log.w("Cannot reserve room #" + mRoomNumber + ": Room state is " + mRoomState);
 		}
 	}
 

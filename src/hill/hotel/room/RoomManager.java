@@ -2,6 +2,7 @@ package hill.hotel.room;
 
 import hill.hotel.config.Config;
 import hill.hotel.guest.Guest;
+import hill.hotel.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class RoomManager {
 			mCheckInList.remove(room);
 		}
 		else {
-			System.out.println("Cannot checkOut: Room #" + key.getRoomNumber() + " was not in status of checkIn");
+			Log.w("Cannot checkOut: Room #" + key.getRoomNumber() + " was not in status of checkIn");
 		}
 	}
 	
