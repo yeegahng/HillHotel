@@ -4,10 +4,12 @@ import hill.hotel.room.Key;
 
 public class Guest {
 
+	private int mGuestCount;
 	private String mVehicleInfo; //vehicle number
 	private Key mKey;
 	
-	public Guest() {
+	public Guest(int guestCount) {
+		mGuestCount = guestCount;
 		mVehicleInfo = null;
 		mKey = null;
 	}

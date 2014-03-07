@@ -45,8 +45,13 @@ public final class GovernmentProxy {
 
 	public boolean registerBusiness(IBusinessRunnable bizOwner) {
 		mBusinessEnrollmentList.add(bizOwner);
-		int licenseNumber = synthesizeLicenseNumber(mBusinessEnrollmentList.indexOf(bizOwner));
-		bizOwner.setLicenseNumber(licenseNumber);
+		try {
+			int licenseNumber = synthesizeLicenseNumber(mBusinessEnrollmentList.indexOf(bizOwner));
+			bizOwner.setLicenseNumber(licenseNumber);
+		}
+		catch(Exception e) {
+			return false;
+		}
 		return true;
 	}
 	

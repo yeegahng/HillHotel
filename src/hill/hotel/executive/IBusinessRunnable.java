@@ -6,6 +6,8 @@ public interface IBusinessRunnable {
 
 	int getLicenseNumber();
 
-	void startBusiness();
+	boolean startBusiness();
+
+	boolean isRunningBusiness();
 
 }

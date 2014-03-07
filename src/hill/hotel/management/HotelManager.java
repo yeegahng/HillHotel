@@ -1,16 +1,21 @@
 package hill.hotel.management;
 
+import java.beans.EventHandler;
+
 import government.service.validity.GovernmentProxy;
 import hill.hotel.executive.HotelOwner;
 import hill.hotel.guest.Guest;
 import hill.hotel.room.RoomManager;
 import hill.hotel.util.Log;
 
-public class HotelManager {
+public class HotelManager implements Runnable {
 	
-	private static HotelManager mHotelManager = null;
+	private static HotelManager sHotelManager = null;
+	private HotelOwner mHotelOwner = null;
 	private boolean mIsHotelReady = false;
 	private final int mLicenseNumber;
+	private static Thread sHotelManagerThread = null;
+	private static boolean sHotelRunning = false;
 	
 	//Staffs
 	private RoomManager roomManager;
@@ -25,24 +30,25 @@ public class HotelManager {
 			return null;
 		}
 		int licenseNumber = hotelOwner.getLicenseNumber();
-		if(!GovernmentProxy.getProxy().verifyLicenseValidity(licenseNumber)) {
+		if(!GovernmentProxy.getProxy().verifyLicenseValidity(licenseNumber, hotelOwner)) {
 			Log.e("Failed to verify HotelOwner license: Cannot call hotel manager.");
 			return null;
 		}
-		if(mHotelManager == null) {
-			mHotelManager = new HotelManager(licenseNumber);
+		if(sHotelManager == null) {
+			sHotelManager = new HotelManager(hotelOwner);
 		}
-		return mHotelManager;
+		return sHotelManager;
 	}
 	
-	private HotelManager(int licenseNumber) {
+	private HotelManager(HotelOwner hotelOwner) {
 		try {
 			hireStaffs();
 		} catch(Exception e) {
 			Log.e("Failed to hire staffs: Cannot open hotel.");
 		}
-		mLicenseNumber = licenseNumber;
+		mLicenseNumber = hotelOwner.getLicenseNumber();
 		mIsHotelReady = true;
+		mHotelOwner = hotelOwner;
 		Log.i("Hotel " + mLicenseNumber + " is ready to open");
 	}
 
@@ -58,6 +64,11 @@ public class HotelManager {
 		return mIsHotelReady;
 	}
 
+	/* Main operations HotelManager do. */
+	/**
+	 * Check in guest. guest is supposed to contain info such as guestCount, vehicleInfo, and whatever needed. 
+	 * @param guest
+	 */
 	public void checkIn(Guest guest) {
 		//TODO queue로 처리할 것
 		roomManager.requestCheckIn(guest);
@@ -70,4 +81,14 @@ public class HotelManager {
 		//TODO queue로 처리할 것
 		roomManager.requestCheckOut(guest);
 	}
+
+	public boolean isHotelRunning() {
+		return sHotelRunning;
+	}
+
+	@Override
+	public void run() {
+		sHotelRunning = true;
+	}
+	
 }
